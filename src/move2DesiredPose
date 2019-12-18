@@ -12,7 +12,7 @@ import rospy
 
 from geometry_msgs.msg import Pose, WrenchStamped
 
-from trajectory_generation import TrajGen
+from Picasso_trajectory_generation import TrajGen
 
 import intera_interface
 
@@ -84,7 +84,6 @@ class Move2DesiredPose(object):
         self.currentEffort = self._limb.endpoint_effort()
         self.desiredZposInRightHand = self.desiredZposInRightHand + self.kP * (self.desiredEEForce - self.currentEffort['force'].z)
         self.desiredEePose.position.z = self.currentPose['position'].z - self.desiredZposInRightHand  # force control
-        # print(self.desiredEePose.position.z)
 
     def gripper_open(self):
         self._gripper.open()
@@ -112,13 +111,11 @@ class Move2DesiredPose(object):
         if(self.modeChanged is True):
             self.currentPose = self._limb.endpoint_pose()
             self.desiredEePose.position.z = self.currentPose['position'].z
-            # print(self.desiredEePose.position.z)
 
     def modeMinus1(self):
         if(self.modeChanged is True):
             self.currentPose = self._limb.endpoint_pose()
             self.desiredEePose.position.z = self.currentPose['position'].z + 0.015
-            # print(self.desiredEePose.position.z)
 
 def main():
     """ The main() function. """
@@ -147,16 +144,12 @@ def main():
 
         eePoseController.previousMode = trajectoryGenerator.get_draw_status()
 
-        # eePoseController.desiredEePose.position.x = eePoseController.initialPose['position'].x
-        # eePoseController.desiredEePose.position.y = eePoseController.initialPose['position'].y
-        # eePoseController.desiredEePose.position.z = eePoseController.initialPose['position'].z
-        # eePoseController.forceControl()
+        print "x, y are: ", [eePoseController.desiredEePose.position.x, eePoseController.desiredEePose.position.y], "draw status is: ", trajectoryGenerator.get_draw_status()
 
         joint_angles = eePoseController._limb.ik_request(eePoseController.desiredEePose)
         eePoseController._limb.set_joint_positions(joint_angles)
 
         eePoseController.publishWrench()
-        # print(eePoseController.wrenchMsg.wrench.force.z)
 
 if __name__ == '__main__':
     try:

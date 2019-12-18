@@ -1,1 +1,2 @@
-from trajectory_generation import *
+from Rico_DFS import *
+from Rico_picToARRAY import *

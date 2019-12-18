@@ -6,18 +6,14 @@ import numpy as np
 import game_state as gs
 import tttAI as ai
 
-
 TF = 3
 DIST_THRE = 0.003
 LINE_LENGTH = 0.04
 HOLD_TIME = 2.5
 FROM_CENTER_D = 0.01*(7.0+1.8)
-#This is the desired elbow camera pose. Modify for your application
-#Coordinate of the marking. Modify for your application
-GREEN_POINT_COORD = np.array([0.6263453770987546, -0.12562004467910037])
-#TESTING
-#CHECKER_CENTER_COORD = np.array([0.7267684830590353, 0.04111839299227235])+ np.array([0.01, 0.01])
 CHECKER_CENTER_COORD = np.array([0.7267684830590353, 0.04111839299227235])+ np.array([0.012, 0.020])
+IMAGE_X_NUM = 200
+IMAGE_Y_NUM = 227
 
 def InsideDistThresh(pos_start, pos_end, DIST_THRE):
     #Checks if two points' x,y position difference is larger than DIST_THRE
@@ -25,7 +21,6 @@ def InsideDistThresh(pos_start, pos_end, DIST_THRE):
         return False
     else:
         return True
-
 
 class TrajGen(object):
     def __init__(self):
@@ -48,10 +43,6 @@ class TrajGen(object):
         #go to camera_pose
         self.go_to_camera_or_standoff('camera')
 
-        # michael camera object to pass to bennett
-        self.camera = gs.Camera()
-        self.gameRunning = True
-
         #Test
         #print self._limb.endpoint_pose()
         # self.object_2_draw = "cross"
@@ -71,9 +62,6 @@ class TrajGen(object):
         if self.if_hold != 1:
 
             if self.object_2_draw == "cross":
-                #print("entering")
-                #print "draw_status", self.current_draw_status
-                #print "s: ", self.s
                 current_pose = self.update_current_pose()
                 # if InsideDistThresh( current_pose, self.current_target, DIST_THRE ):
                 #print"this is cross"
@@ -156,8 +144,6 @@ class TrajGen(object):
 
 
     def get_next_object_center(self):
-        #call AI function to get center, object to draw
-        # bennett function gets called
 
         boardCoordinate,shapeInt = ai.Update(self.camera)
         robotCoordinate = ai.convertCoor(boardCoordinate)
@@ -172,33 +158,12 @@ class TrajGen(object):
             return
         self.center = [CHECKER_CENTER_COORD[0] + robotCoordinate[0]* FROM_CENTER_D, CHECKER_CENTER_COORD[1]  + robotCoordinate[1]* FROM_CENTER_D]
 
-        # ## TODO:
-
-        #Test
-        #print robotCoordinate
-        # if self.object_2_draw == "cross":
-        #      self.object_2_draw = "idle"
-
-
-
-
     def go_to_camera_or_standoff(self,destination):
         '''
         Destination: 'camera' - camera pose; 'standoff' - stand off pose
         '''
-        #0.176208007813 -0.1716953125 -0.287819335937 0.616485351562 -2.85697167969 -2.81928320312 -4.11785449219
         joint_angles = None
-        if destination == 'camera':
-            joint_angles = { 'right_j0':  0.176208007813,
-                             'right_j1':  -0.1716953125,
-                             'right_j2': -0.287819335937,
-                             'right_j3': 0.616485351562,
-                             'right_j4': -2.85697167969,
-                             'right_j5': -2.81928320312,
-                             'right_j6': -4.11785449219}
-
-
-        elif destination == 'standoff':
+        if destination == 'standoff':
 
             joint_angles = { 'right_j0': -0.570514648437,
                              'right_j1': -0.405889648437,
@@ -209,7 +174,6 @@ class TrajGen(object):
                              'right_j6': -1.51012792969}
 
         self._limb.move_to_joint_positions(joint_angles)
-
 
     def setup_cross_params(self):
         '''
@@ -267,7 +231,6 @@ class TrajGen(object):
         '''
         Returns the waypoint [x,y] for the next instant.
         '''
-        #print self.object_2_draw
         coord = None
         if self.object_2_draw == "circle":
             #TODO
@@ -291,7 +254,6 @@ class TrajGen(object):
 
     def get_draw_status(self):
         #Test
-        #print self.current_draw_status
         return self.current_draw_status
 
 

@@ -2,13 +2,28 @@
 import numpy as np
 import sys
 RECURSION_LIM = 400
-#sys.setrecursionlimit(RECURSION_LIM)
 import csv
 from Rico_picToARRAY import get_pic_array
 import matplotlib.pyplot as plt
 
+pic = get_pic_array("../images/IMG_4926_adjust_2.jpg")
+# pic = np.array([
+#     [1, 1, 1, 1],
+#     [255, 1, 255, 255],
+#     [255, 255, 255, 1],
+#     [255, 255, 1, 255],
+#     [255, 255, 255, 1],
+#     [255, 255, 255, 255],
+#     [255, 1, 255, 1],
+#     [255, 1, 255, 1],
+#     [255, 255, 255, 255]
+# ])
+
+ROW_NUM = len(pic)
+COLUMN_NUM = len(pic[0])
 
 def get_connected_neighbors(pic, point):
+    global ROW_NUM, COLUMN_NUM
     pic = np.array(pic)
     ret_neighbors = set()
     for row_increment in [-1, 0, 1]:
@@ -40,12 +55,25 @@ def add_point_to_path_ls(path_list, start):
     return path_list
 
 
+def remove_short_paths(path_list):
+    '''
+    Removes all short paths but return the longest path in the path_list
+    '''
+    if len(path_list) > 0:
+        max_len = 0
+        index_max = 0
+        for index, path in enumerate(path_list):
+            if len(path) > max_len:
+                index_max = index
+        path_list = [path_list[index_max]]
+
+    return path_list
+
 def dfs(counter, pic, start, path_list, visited=None):
     if visited is None:
         visited = set()
 
     if counter< RECURSION_LIM:
-        # print "counter, ", counter
         if pic[start[0]][start[1]] <= 250:
             visited.add(start)
             connected_neighbors = get_connected_neighbors(pic, start)
@@ -54,8 +82,10 @@ def dfs(counter, pic, start, path_list, visited=None):
                     counter += 1
                     path_list, counter = dfs(counter, pic, next_pt, path_list, visited)
 
-            #if there is only one point in the graph, omit it.
             path_list = add_point_to_path_ls(path_list, start)
+            #RETURN ONLY THE LONGEST PATH
+            path_list = remove_short_paths(path_list)
+
     return path_list, counter
 
 
@@ -66,50 +96,42 @@ def wipe_off_visited_points(path_list, pic):
     return pic
 
 
-total_path_list = []
+def get_total_path_list():
+    '''
+    Returns the total paths of a robot.
+    '''
+    global ROW_NUM, COLUMN_NUM, pic
+    total_path_list = []
+    #Iterate thru all points on the image
+    for row in range(ROW_NUM):
+        for cln in range(COLUMN_NUM):
+            counter = 0
+            path_list, counter = dfs(counter, pic, (row, cln), [])
+            pic = wipe_off_visited_points(path_list,pic)
+            total_path_list = total_path_list + path_list
 
-pic = get_pic_array("../images/IMG_4926_adjust_2.jpg")
-# pic = np.array([
-#     [1, 1, 1, 1],
-#     [255, 1, 255, 255],
-#     [255, 255, 255, 1],
-#     [255, 255, 1, 255],
-#     [255, 255, 255, 1],
-#     [255, 255, 255, 255],
-#     [255, 1, 255, 1],
-#     [255, 1, 255, 1],
-#     [255, 255, 255, 255]
-# ])
+    #Pop points (standalone points) and keep multi-point paths in the path list
+    for index, path in enumerate(total_path_list):
+        if len(path) == 1:
+            # if you're not the first point or the last point, point not be popped
+            if index!= 0 and index!= len(total_path_list)-1:
+                if len(total_path_list[index-1])>1:
+                    continue
+            total_path_list.pop(index)
 
-ROW_NUM = len(pic)
-COLUMN_NUM = len(pic[0])
-path_count = 0
-populate_count = 0
+    return total_path_list
 
-p = 255*np.ones((ROW_NUM, COLUMN_NUM))
+if __name__ == '__main__':
 
-for row in range(ROW_NUM):
-    for cln in range(COLUMN_NUM):
-        counter = 0
-        path_list, counter = dfs(counter, pic, (row, cln), [])
-        pic = wipe_off_visited_points(path_list,pic)
+    p = 255*np.ones((ROW_NUM, COLUMN_NUM))
+    total_path_list = get_total_path_list()
+        #Test
+    path_count = 0
+    for path in total_path_list:
+        for pt in path:
+            p[pt[0]][pt[1]] = 1
         path_count += 1
-        total_path_list = total_path_list + path_list
-        populate_count += 1
 
-
-
-for index, path in enumerate(total_path_list):
-    print index
-    if len(path) == 1:
-        total_path_list.pop(index)
-
-#Test
-for path in total_path_list:
-    for pt in path:
-        p[pt[0]][pt[1]] = 1
-    populate_count += 1
-
-print "populated: ", populate_count
-plt.imshow(p, cmap='gray', vmin=0, vmax=255)
-plt.show()
+    print "populated: ", path_count
+    plt.imshow(p, cmap='gray', vmin=0, vmax=255)
+    plt.show()
