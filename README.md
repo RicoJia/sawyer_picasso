@@ -1,16 +1,16 @@
 # Sawyer the Picasso
 
-# Project Overview
+## Project Overview
 A robot can draw like an artist! In this project,In the following package, you are able to draw a custom picture on a piece of letter size paper using a Rethink Sawyer Robot. 
 The package implements the drawing process on a pixel by pixel basis, using [Depth-First-Search algorithm](https://www.geeksforgeeks.org/depth-first-search-or-dfs-for-a-graph/).  
 Also, the drawing quality is further ensured by force control, so don't worry about bumpy or slant surfaces!    
 
-##### Authors:
+##### Authors
 Rico Jia - ruotongjia2020@u.northwestern.edu
 
 Emek Baris Kucuktabak
 
-##### Dependencies
+##### System Requirement
 Ros Melodic
 
 ##### Video Demonstration
@@ -24,7 +24,7 @@ Ros Melodic
     - A marker with tip size 1.25"x5.13" 
     - Two clamp-ons/Scotch tape for stablizing the dry-erase board/paper
  
-* Start Sawyer arm and connection between the sawyer arm and the control computer
+* Start the Sawyer arm and its connection to the control computer
  
 * Find the center of the workspace by running:
 ```
@@ -42,7 +42,6 @@ $ mkdir -p ~/sawyer_picasso/src
 $ cd ~/sawyer_picasso/src
 $ wstool init
 $ wstool set sawyer_picasso --git https://github.com/RicoJia/sawyer_picasso.git
-$ wstool merge 
 $ wstool update
 $ cd ..
 $ catkin_make 
