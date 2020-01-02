@@ -1,9 +1,9 @@
 # Sawyer the Picasso
 
 ## Project Overview
-A robot can draw like an artist! In this project,In the following package, you are able to draw a custom picture on a piece of letter size paper using a Rethink Sawyer Robot. 
+A robot can draw like an artist! In this project, you are able to draw a custom picture on a piece of letter size paper using a Rethink Sawyer Robot. 
 The package implements the drawing process on a pixel by pixel basis, using [Depth-First-Search algorithm](https://www.geeksforgeeks.org/depth-first-search-or-dfs-for-a-graph/).  
-Also, the drawing quality is further ensured by force control, so don't worry about bumpy or slant surfaces!    
+The drawing quality is further enhanced by a force control feature, so don't worry about bumpy or slanted surfaces!    
 
 ##### Authors
 Rico Jia - ruotongjia2020@u.northwestern.edu
@@ -34,9 +34,9 @@ rosrun intera_examples go_to_joint_angles.py -q -0.715609375 -0.397354492188 -2.
 * Set up the drawing area 2.0cm below the end gripper position. Don't worry about getting the exact vertical position, the force control feature
 will compensate for the inaccuracy in the vertical direction
 
-* Restart Sawyer and rebuild connection between the control computer and sawyer robot
+* Restart Sawyer and rebuild connection between the control computer and Sawyer robot
 
-* Download this package to a local computer and compile
+* Download this package to a local computer and build
 ``` 
 $ mkdir -p ~/sawyer_picasso/src
 $ cd ~/sawyer_picasso/src
