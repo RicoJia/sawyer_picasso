@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="VcsDirectoryMappings">
+    <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/baxter" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/baxter_common" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/baxter_examples" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/baxter_interface" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/baxter_simulator" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/baxter_tools" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/intera_common" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/intera_sdk" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/sawyer_robot" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/sawyer_simulator" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/sns_ik" vcs="Git" />
+  </component>
+</project>
